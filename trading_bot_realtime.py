@@ -19,7 +19,12 @@ except Exception as e:
 # Webhook URL để gửi tín hiệu (Thay YOUR-FUNCTION-NAME bằng tên thực tế)
 import os
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+if not WEBHOOK_URL:
+    raise RuntimeError("WEBHOOK_URL is not set in environment variables")
+
 SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set in environment variables")
 # Test health check: https://trading-bot-webhook.azurewebsites.net/api/health
 
 # Đường dẫn model
@@ -70,7 +75,7 @@ SELECTED_FEATURES = [
 def send_signal_to_web(action, symbol, price, confidence):
     """Gửi tín hiệu về Website qua HTTP POST"""
     payload = {
-        "secret_key": "my_super_secret_password",  # Bảo mật
+        "secret_key": SECRET_KEY,  # Bảo mật
         "symbol": symbol,
         "action": action,  # "LONG" hoặc "SHORT"
         "price": price,
@@ -413,4 +418,5 @@ if __name__ == "__main__":
     
     bot = TradingBot()
     bot.run()
+
 
