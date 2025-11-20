@@ -2,7 +2,7 @@ name: Build & Push Docker image to GHCR
 
 on:
   push:
-    branches: ["main"]  
+    branches: ["main"]
 
 jobs:
   build-and-push:
@@ -29,4 +29,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/trading-bot-realtime:latest
+            ghcr.io/${{ github.repository_owner,, }}/trading-bot-realtime:latest
