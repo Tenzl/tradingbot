@@ -2,7 +2,7 @@ name: Build & Push Docker image to GHCR
 
 on:
   push:
-    branches: ["main"]   # hoặc "master" nếu bạn dùng branch đó
+    branches: ["main"]  
 
 jobs:
   build-and-push:
