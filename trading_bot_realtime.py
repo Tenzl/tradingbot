@@ -17,7 +17,9 @@ except Exception as e:
 # 1. CẤU HÌNH (CONFIG)
 # ==========================================
 # Webhook URL để gửi tín hiệu (Thay YOUR-FUNCTION-NAME bằng tên thực tế)
-WEBHOOK_URL = "https://trading-bot-webhook.azurewebsites.net/api/trading-webhook"
+import os
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+SECRET_KEY = os.getenv("SECRET_KEY")
 # Test health check: https://trading-bot-webhook.azurewebsites.net/api/health
 
 # Đường dẫn model
@@ -411,3 +413,4 @@ if __name__ == "__main__":
     
     bot = TradingBot()
     bot.run()
+
