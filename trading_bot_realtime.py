@@ -18,13 +18,15 @@ except Exception as e:
 # ==========================================
 # Webhook URL để gửi tín hiệu (Thay YOUR-FUNCTION-NAME bằng tên thực tế)
 import os
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
-if not WEBHOOK_URL:
-    raise RuntimeError("WEBHOOK_URL is not set in environment variables")
+# WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+# if not WEBHOOK_URL:
+#     raise RuntimeError("WEBHOOK_URL is not set in environment variables")
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise RuntimeError("SECRET_KEY is not set in environment variables")
+WEBHOOK_URL = "https://trade-ingest-thk.azurewebsites.net/api/webhook/3359389a-7483-4ae9-ac8f-991d647b3f8a"
+SECRET_KEY = "vTiBpjPuLARyN6sa0edRem2mrs3wYDPfmxVwqLZyYpc"
+# SECRET_KEY = os.getenv("SECRET_KEY")
+# if not SECRET_KEY:
+#     raise RuntimeError("SECRET_KEY is not set in environment variables")
 # Test health check: https://trading-bot-webhook.azurewebsites.net/api/health
 
 # Đường dẫn model
@@ -78,8 +80,8 @@ def send_signal_to_web(action, symbol, price, confidence):
         "secret_key": SECRET_KEY,  # Bảo mật
         "symbol": symbol,
         "action": action,  # "LONG" hoặc "SHORT"
-        "price": price,
-        "confidence": confidence,  # Độ tự tin (%)
+        "price": float(price),  # Convert numpy/pandas float to Python float
+        "confidence": float(confidence),  # Convert numpy/pandas float to Python float
         "timestamp": datetime.now().isoformat()
     }
     
@@ -376,6 +378,7 @@ class TradingBot:
                 # Kiểm tra NaN
                 if last_row.isnull().any().any():
                     print(f"⚠️ Features contain NaN, skipping prediction")
+                    send_signal_to_web("ERROR", SYMBOL, current_price, 0.0)
                     continue
                 
                 # --- D. Dự đoán bằng XGBoost ---
@@ -401,11 +404,16 @@ class TradingBot:
                 
                 else:
                     print(f"⚪ No signal (Probability in neutral zone)")
+                    send_signal_to_web("NEUTRAL", SYMBOL, current_price, float(prob_up * 100))
                 
             except Exception as e:
                 print(f"❌ Error in main loop: {e}")
                 import traceback
                 traceback.print_exc()
+                try:
+                    send_signal_to_web("ERROR", SYMBOL, 0.0, 0.0)
+                except:
+                    pass
                 time.sleep(5)
 
 # ==========================================
