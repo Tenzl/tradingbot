@@ -18,15 +18,13 @@ except Exception as e:
 # ==========================================
 # Webhook URL để gửi tín hiệu (Thay YOUR-FUNCTION-NAME bằng tên thực tế)
 import os
-# WEBHOOK_URL = os.getenv("WEBHOOK_URL")
-# if not WEBHOOK_URL:
-#     raise RuntimeError("WEBHOOK_URL is not set in environment variables")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+if not WEBHOOK_URL:
+    raise RuntimeError("WEBHOOK_URL is not set in environment variables")
 
-WEBHOOK_URL = "https://trade-ingest-thk.azurewebsites.net/api/webhook/3359389a-7483-4ae9-ac8f-991d647b3f8a"
-SECRET_KEY = "vTiBpjPuLARyN6sa0edRem2mrs3wYDPfmxVwqLZyYpc"
-# SECRET_KEY = os.getenv("SECRET_KEY")
-# if not SECRET_KEY:
-#     raise RuntimeError("SECRET_KEY is not set in environment variables")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set in environment variables")
 # Test health check: https://trading-bot-webhook.azurewebsites.net/api/health
 
 # Đường dẫn model
